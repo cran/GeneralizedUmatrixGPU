@@ -90,12 +90,7 @@ Cls=Chainlink$Cls
 InputDistances=as.matrix(dist(Data))
 res=cmdscale(d=InputDistances, k = 2, eig = TRUE, add = FALSE, x.ret = FALSE)
 ProjectedPoints=as.matrix(res$points)
-\donttest{
-if(requireNamespace("ProjectionBasedClustering")){
-Stress = ProjectionBasedClustering::KruskalStress(InputDistances,
-as.matrix(dist(ProjectedPoints)))
-}
-}
+
 \donttest{
 resUmatrix=GeneralizedUmatrixGPU(Data[1:2,], ProjectedPoints[1:2,])
 #plotTopographicMap(resUmatrix$Umatrix,resUmatrix$Bestmatches)

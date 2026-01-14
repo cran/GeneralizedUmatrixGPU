@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // trainSESOM
-NumericVector trainSESOM(NumericVector Data, NumericVector BMUs, NumericVector RadiusVector, int N, int DIM, double MinData, double MaxData, int Lines, int Columns, int Weights, bool toroid, int NumDataPerEpoch);
+Rcpp::List trainSESOM(NumericVector Data, NumericVector BMUs, NumericVector RadiusVector, int N, int DIM, double MinData, double MaxData, int Lines, int Columns, int Weights, bool toroid, int NumDataPerEpoch);
 RcppExport SEXP _GeneralizedUmatrixGPU_trainSESOM(SEXP DataSEXP, SEXP BMUsSEXP, SEXP RadiusVectorSEXP, SEXP NSEXP, SEXP DIMSEXP, SEXP MinDataSEXP, SEXP MaxDataSEXP, SEXP LinesSEXP, SEXP ColumnsSEXP, SEXP WeightsSEXP, SEXP toroidSEXP, SEXP NumDataPerEpochSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

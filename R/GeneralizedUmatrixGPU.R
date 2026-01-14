@@ -345,11 +345,15 @@ GeneralizedUmatrixGPU=function(Data, ProjectedPoints, PlotIt=FALSE, Cls=NULL,
   
   NumDataPerEpoch = floor(dim(Data)[1]*DataPerEpoch)
   
-  wts = trainSESOM(Data, BMUs, RadiusVector,
-                   N = dim(Data)[1], DIM = dim(Data)[2],
-                   MinData, MaxData,
-                   Lines = k, Columns = m, Weights = d,
-                   toroid = toroid, NumDataPerEpoch = NumDataPerEpoch)
+  VGPU = trainSESOM(Data, BMUs, RadiusVector, N = dim(Data)[1], DIM = dim(Data)[2],
+                    MinData, MaxData, Lines = k, Columns = m, Weights = d,
+                    toroid = toroid, NumDataPerEpoch = NumDataPerEpoch)
+  
+  if(VGPU$Feedback != "success"){
+    stop("Something went wrong within the context of OpenCL.")
+  }
+  
+  wts = VGPU$esomwts
   
   #return(wts)
   

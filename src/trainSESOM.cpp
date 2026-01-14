@@ -30,7 +30,7 @@ std::string get_UpdateWeights(){
       size_t j = get_global_id(1);
       size_t i = get_global_id(2);
       
-      if((k < Lines) & (j < Columns) & (i < Weights)){
+      if((k < Lines) && (j < Columns) && (i < Weights)){
         float pi            = 3.1416;
         float tmpVar1       = OutputDistances[k + j*Lines] * OutputDistances[k + j*Lines];
         float tmpVar2       = (float) (Radius * Radius);
@@ -67,7 +67,7 @@ std::string get_ToroidDistance(){
       size_t i = get_global_id(0);
       size_t j = get_global_id(1);
       
-      if((i < Lines) & (j < Columns)){
+      if((i < Lines) && (j < Columns)){
         float tmpVar1                = CorrectLines - fabs(2.0 * fabs(((float) i) - bm1) - CorrectLines);
         float FirstPart              = tmpVar1 * tmpVar1;
         float tmpVar2                = CorrectColumns - fabs(2.0 * fabs(((float) j) - bm2) - CorrectColumns);
@@ -96,7 +96,7 @@ std::string get_NonToroidDistance(){
       size_t i = get_global_id(0);
       size_t j = get_global_id(1);
       
-      if((i < Lines) & (j < Columns)){
+      if((i < Lines) && (j < Columns)){
         OutputDistances[j*Lines + i] = sqrt(pow(i - bm1, 2) + pow(j - bm2, 2));
         // Symmetrie ist nicht ausnutzbar: keine quadratische Matrix!
         //OutputDistances(j,i) = OutputDistances(i,j);
@@ -107,73 +107,122 @@ std::string get_NonToroidDistance(){
   return(NonToroidDistance);
 }
 
-// static char* get_info_string(cl_platform_id plat, cl_platform_info param) {
-//   size_t size = 0;
-//   cl_int err = clGetPlatformInfo(plat, param, 0, NULL, &size);
-//   if (err != CL_SUCCESS) return NULL;
-//   char *buf = (char*)malloc(size + 1);
-//   if (!buf) return NULL;
-//   err = clGetPlatformInfo(plat, param, size, buf, NULL);
-//   if (err != CL_SUCCESS) { free(buf); return NULL; }
-//   buf[size] = '\0';
-//   return buf;
-// }
-// 
-// static char* get_device_info_string(cl_device_id dev, cl_device_info param) {
-//   size_t size = 0;
-//   cl_int err = clGetDeviceInfo(dev, param, 0, NULL, &size);
-//   if (err != CL_SUCCESS) return NULL;
-//   char *buf = (char*)malloc(size + 1);
-//   if (!buf) return NULL;
-//   err = clGetDeviceInfo(dev, param, size, buf, NULL);
-//   if (err != CL_SUCCESS) { free(buf); return NULL; }
-//   buf[size] = '\0';
-//   return buf;
-// }
-// 
-// static void print_device_type(cl_device_id dev) {
-//   cl_device_type type;
-//   if (clGetDeviceInfo(dev, CL_DEVICE_TYPE, sizeof(type), &type, NULL) != CL_SUCCESS) {
-//     printf("    Type: <unknown>\n");
-//     return;
-//   }
-//   printf("    Type: ");
-//   if (type & CL_DEVICE_TYPE_CPU) printf("CPU ");
-//   if (type & CL_DEVICE_TYPE_GPU) printf("GPU ");
-//   if (type & CL_DEVICE_TYPE_ACCELERATOR) printf("ACCELERATOR ");
-//   if (type & CL_DEVICE_TYPE_DEFAULT) printf("DEFAULT ");
-//   printf("\n");
-// }
+const char *getErrorString(cl_int error){
+  switch(error){
+  // run-time and JIT compiler errors
+  case 0: return "CL_SUCCESS";
+  case -1: return "CL_DEVICE_NOT_FOUND";
+  case -2: return "CL_DEVICE_NOT_AVAILABLE";
+  case -3: return "CL_COMPILER_NOT_AVAILABLE";
+  case -4: return "CL_MEM_OBJECT_ALLOCATION_FAILURE";
+  case -5: return "CL_OUT_OF_RESOURCES";
+  case -6: return "CL_OUT_OF_HOST_MEMORY";
+  case -7: return "CL_PROFILING_INFO_NOT_AVAILABLE";
+  case -8: return "CL_MEM_COPY_OVERLAP";
+  case -9: return "CL_IMAGE_FORMAT_MISMATCH";
+  case -10: return "CL_IMAGE_FORMAT_NOT_SUPPORTED";
+  case -11: return "CL_BUILD_PROGRAM_FAILURE";
+  case -12: return "CL_MAP_FAILURE";
+  case -13: return "CL_MISALIGNED_SUB_BUFFER_OFFSET";
+  case -14: return "CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST";
+  case -15: return "CL_COMPILE_PROGRAM_FAILURE";
+  case -16: return "CL_LINKER_NOT_AVAILABLE";
+  case -17: return "CL_LINK_PROGRAM_FAILURE";
+  case -18: return "CL_DEVICE_PARTITION_FAILED";
+  case -19: return "CL_KERNEL_ARG_INFO_NOT_AVAILABLE";
+    
+    // compile-time errors
+  case -30: return "CL_INVALID_VALUE";
+  case -31: return "CL_INVALID_DEVICE_TYPE";
+  case -32: return "CL_INVALID_PLATFORM";
+  case -33: return "CL_INVALID_DEVICE";
+  case -34: return "CL_INVALID_CONTEXT";
+  case -35: return "CL_INVALID_QUEUE_PROPERTIES";
+  case -36: return "CL_INVALID_COMMAND_QUEUE";
+  case -37: return "CL_INVALID_HOST_PTR";
+  case -38: return "CL_INVALID_MEM_OBJECT";
+  case -39: return "CL_INVALID_IMAGE_FORMAT_DESCRIPTOR";
+  case -40: return "CL_INVALID_IMAGE_SIZE";
+  case -41: return "CL_INVALID_SAMPLER";
+  case -42: return "CL_INVALID_BINARY";
+  case -43: return "CL_INVALID_BUILD_OPTIONS";
+  case -44: return "CL_INVALID_PROGRAM";
+  case -45: return "CL_INVALID_PROGRAM_EXECUTABLE";
+  case -46: return "CL_INVALID_KERNEL_NAME";
+  case -47: return "CL_INVALID_KERNEL_DEFINITION";
+  case -48: return "CL_INVALID_KERNEL";
+  case -49: return "CL_INVALID_ARG_INDEX";
+  case -50: return "CL_INVALID_ARG_VALUE";
+  case -51: return "CL_INVALID_ARG_SIZE";
+  case -52: return "CL_INVALID_KERNEL_ARGS";
+  case -53: return "CL_INVALID_WORK_DIMENSION";
+  case -54: return "CL_INVALID_WORK_GROUP_SIZE";
+  case -55: return "CL_INVALID_WORK_ITEM_SIZE";
+  case -56: return "CL_INVALID_GLOBAL_OFFSET";
+  case -57: return "CL_INVALID_EVENT_WAIT_LIST";
+  case -58: return "CL_INVALID_EVENT";
+  case -59: return "CL_INVALID_OPERATION";
+  case -60: return "CL_INVALID_GL_OBJECT";
+  case -61: return "CL_INVALID_BUFFER_SIZE";
+  case -62: return "CL_INVALID_MIP_LEVEL";
+  case -63: return "CL_INVALID_GLOBAL_WORK_SIZE";
+  case -64: return "CL_INVALID_PROPERTY";
+  case -65: return "CL_INVALID_IMAGE_DESCRIPTOR";
+  case -66: return "CL_INVALID_COMPILER_OPTIONS";
+  case -67: return "CL_INVALID_LINKER_OPTIONS";
+  case -68: return "CL_INVALID_DEVICE_PARTITION_COUNT";
+    
+    // extension errors
+  case -1000: return "CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR";
+  case -1001: return "CL_PLATFORM_NOT_FOUND_KHR";
+  case -1002: return "CL_INVALID_D3D10_DEVICE_KHR";
+  case -1003: return "CL_INVALID_D3D10_RESOURCE_KHR";
+  case -1004: return "CL_D3D10_RESOURCE_ALREADY_ACQUIRED_KHR";
+  case -1005: return "CL_D3D10_RESOURCE_NOT_ACQUIRED_KHR";
+  default: return "Unknown OpenCL error";
+  }
+}
 
-//static void die(const char *msg, cl_int err) {
-//  if (err != CL_SUCCESS) {
-//    fprintf(stderr, "%s (err = %d)\n", msg, err);
-//    exit(EXIT_FAILURE);
-//  } else {
-//    fprintf(stderr, "%s\n", msg);
-//    exit(EXIT_FAILURE);
-//  }
-//}
+char* get_device_info_string(cl_device_id dev, cl_device_info param) {
+  size_t size = 0;
+  cl_int err = clGetDeviceInfo(dev, param, 0, NULL, &size);
+  if (err != CL_SUCCESS) return NULL;
+  char *buf = (char*)malloc(size + 1);
+  if (!buf) return NULL;
+  err = clGetDeviceInfo(dev, param, size, buf, NULL);
+  if (err != CL_SUCCESS) { free(buf); return NULL; }
+  buf[size] = '\0';
+  return buf;
+}
 
-std::vector<float> trainstepC3(std::vector<float> esomwts,
-                               std::vector<float> DataSampled,
-                               std::vector<float> BMUsampled,
-                               std::vector<int> Index,
-                               int N, int DIM, int NumDataPerEpoch,
-                               int Lines, int Columns, int Weights, int Radius,
-                               bool toroid, int Iteration){
+Rcpp::List internal_error_handler(int numPlatforms, int numDevices, char* dev_name, cl_int Error){
+  const char* message = getErrorString(Error);
+  return Rcpp::List::create(Rcpp::Named("esomwts")         = 0,
+                            Rcpp::Named("NumberPlatforms") = numPlatforms,
+                            Rcpp::Named("NumberDevices")   = numDevices,
+                            Rcpp::Named("DeviceName")      = std::string(dev_name),
+                            Rcpp::Named("Feedback")        = std::string(message)); 
+}
+
+Rcpp::List trainstepC3(std::vector<float> esomwts, std::vector<float> DataSampled,
+                       std::vector<float> BMUsampled, std::vector<int> Index,
+                       int N, int DIM, int NumDataPerEpoch, int Lines, int Columns,
+                       int Weights, int Radius, bool toroid, int Iteration){
   
   // OpenCL device search ------------------------------------------------------
   //cl_int err;
+  cl_int Error = 0;
   cl_uint numPlatforms = 0;
   clGetPlatformIDs(0, nullptr, &numPlatforms);
   
   //if(err != CL_SUCCESS) die("Failed to query number of platforms", err);
-  
   if(numPlatforms == 0){
-    //printf("No OpenCL platforms found.\n");
-    std::vector<float> ZeroRes(Lines*Columns*Weights);
-    return ZeroRes; // return 0-vector of size Lines*Columns*Weights
+    const char* msg1  = "No OpenCL platform found!";
+    return Rcpp::List::create(Rcpp::Named("esomwts")         = esomwts,
+                              Rcpp::Named("NumberPlatforms") = 0,
+                              Rcpp::Named("NumberDevices")   = 0,
+                              Rcpp::Named("DeviceName")      = std::string(msg1),
+                              Rcpp::Named("Feedback")        = std::string(msg1));
   }
   
   std::vector<cl_platform_id> platforms(numPlatforms);
@@ -197,6 +246,7 @@ std::vector<float> trainstepC3(std::vector<float> esomwts,
   cl_uint PlatformIdx = 0;
   cl_uint DeviceNumber = 0;
   cl_uint MaxCU = 0;
+  int NumDevices = 0;
   
   for(cl_uint i = 0; i < numPlatforms; ++i){
     //printf("  Platform %u:\n", i);
@@ -207,6 +257,9 @@ std::vector<float> trainstepC3(std::vector<float> esomwts,
     clGetDeviceIDs(platforms[i], CL_DEVICE_TYPE_ALL, numDevicesSearch, deviceSearch.data(), nullptr);
     
     for(cl_uint d = 0; d < numDevicesSearch; ++d){
+      
+      NumDevices = NumDevices + 1;
+      
       //printf("  Device %u:\n", d);
       
       // char *dev_name = get_device_info_string(deviceSearch[d], CL_DEVICE_NAME);
@@ -261,9 +314,17 @@ std::vector<float> trainstepC3(std::vector<float> esomwts,
   cl_uint numDevices = 0;
   clGetDeviceIDs(platforms[PlatformIdx], CL_DEVICE_TYPE_ALL, 0, nullptr, &numDevices);
   std::vector<cl_device_id> devices(numDevices);
+  if(numDevices == 0){
+    const char* msg1  = "No Device found.";
+    return Rcpp::List::create(Rcpp::Named("esomwts")         = esomwts,
+                              Rcpp::Named("NumberPlatforms") = 0,
+                              Rcpp::Named("NumberDevices")   = 0,
+                              Rcpp::Named("DeviceName")      = std::string(msg1),
+                              Rcpp::Named("Feedback")        = std::string(msg1));
+  }
   clGetDeviceIDs(platforms[PlatformIdx], CL_DEVICE_TYPE_ALL, numDevices, devices.data(), nullptr);
   
-  //char *dev_name = get_device_info_string(devices[DeviceNumber], CL_DEVICE_NAME);
+  char *dev_name = get_device_info_string(devices[DeviceNumber], CL_DEVICE_NAME);
   //printf("Name: %s\n", dev_name ? dev_name : "<unknown>");
   
   int LCS = Lines * Columns;
@@ -281,36 +342,59 @@ std::vector<float> trainstepC3(std::vector<float> esomwts,
     }
   }
   
-  cl_int Error0, Error1, Error2, Error3;
   // Build and compile the kernel
-  cl_context MyOCLContext     = clCreateContext(nullptr, 1, &devices[DeviceNumber], nullptr, nullptr, &Error0);
-  cl_command_queue MyOCLQueue = clCreateCommandQueue(MyOCLContext, devices[DeviceNumber], 0, &Error0);
-  //cl_command_queue MyOCLQueue = clCreateCommandQueueWithProperties(MyOCLContext, devices[DeviceNumber], 0, &Error0);
+  cl_context MyOCLContext     = clCreateContext(nullptr, 1, &devices[DeviceNumber], nullptr, nullptr, &Error);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
+  cl_command_queue MyOCLQueue = clCreateCommandQueue(MyOCLContext, devices[DeviceNumber], 0, &Error);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
+  //cl_command_queue MyOCLQueue = clCreateCommandQueueWithProperties(MyOCLContext, devices[DeviceNumber], 0, &Error);
   
   //if(toroid == true){
     std::string KernelToroidDistance = get_ToroidDistance();
     const char* Code1 = KernelToroidDistance.c_str();
     size_t CodeLength1 = KernelToroidDistance.size();
-    cl_program Program_ToroidDistance = clCreateProgramWithSource(MyOCLContext, 1, &Code1, &CodeLength1, &Error1);
+    cl_program Program_ToroidDistance = clCreateProgramWithSource(MyOCLContext, 1, &Code1, &CodeLength1, &Error);
+    if(Error != CL_SUCCESS){
+      return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+    }
     clBuildProgram(Program_ToroidDistance, 1, &devices[DeviceNumber], nullptr, nullptr, nullptr);
-    cl_kernel Kernel_ToroidDistance = clCreateKernel(Program_ToroidDistance, "toroid_distance", &Error1);
+    cl_kernel Kernel_ToroidDistance = clCreateKernel(Program_ToroidDistance, "toroid_distance", &Error);
+    if(Error != CL_SUCCESS){
+      return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+    }
     size_t SizeToroidDistance[2] = {(size_t) Lines, (size_t) Columns};
   //}else{
     std::string KernelNonToroidDistance = get_NonToroidDistance();
     const char* Code2 = KernelNonToroidDistance.c_str();
     size_t CodeLength2 = KernelNonToroidDistance.size();
-    cl_program Program_NonToroidDistance = clCreateProgramWithSource(MyOCLContext, 1, &Code2, &CodeLength2, &Error2);
+    cl_program Program_NonToroidDistance = clCreateProgramWithSource(MyOCLContext, 1, &Code2, &CodeLength2, &Error);
+    if(Error != CL_SUCCESS){
+      return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+    }
     clBuildProgram(Program_NonToroidDistance, 1, &devices[DeviceNumber], nullptr, nullptr, nullptr);
-    cl_kernel Kernel_NonToroidDistance = clCreateKernel(Program_NonToroidDistance, "non_toroid_distance", &Error2);
+    cl_kernel Kernel_NonToroidDistance = clCreateKernel(Program_NonToroidDistance, "non_toroid_distance", &Error);
+    if(Error != CL_SUCCESS){
+      return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+    }
     size_t SizeNonToroidDistance[2] = {(size_t) Lines, (size_t) Columns};
   //}
   
   std::string KernelUpdateWeights = get_UpdateWeights();
   const char* Code3 = KernelUpdateWeights.c_str();
   size_t CodeLength3 = KernelUpdateWeights.size();
-  cl_program Program_UpdateWeights = clCreateProgramWithSource(MyOCLContext, 1, &Code3, &CodeLength3, &Error3);
+  cl_program Program_UpdateWeights = clCreateProgramWithSource(MyOCLContext, 1, &Code3, &CodeLength3, &Error);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
   clBuildProgram(Program_UpdateWeights, 1, &devices[DeviceNumber], nullptr, nullptr, nullptr);
-  cl_kernel Kernel_UpdateWeights = clCreateKernel(Program_UpdateWeights, "update_weights", &Error3);
+  cl_kernel Kernel_UpdateWeights = clCreateKernel(Program_UpdateWeights, "update_weights", &Error);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
   size_t SizeUpdateWeights[3] = {(size_t) Lines, (size_t) Columns, (size_t) Weights};
   
   // Initiate/Instantiate OpenCL buffers:
@@ -318,10 +402,19 @@ std::vector<float> trainstepC3(std::vector<float> esomwts,
   // CPP API for OpenCL:
   //cl::Buffer clData(MyOCLContext, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N * DIM, DataSampled.data());
   // C API for OpenCL:
-  cl_mem clData = clCreateBuffer(MyOCLContext, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N * DIM, DataSampled.data(), &Error0);
+  cl_mem clData = clCreateBuffer(MyOCLContext, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * N * DIM, DataSampled.data(), &Error);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
   // Create OpenCL buffers for changing variables
-  cl_mem clESOM = clCreateBuffer(MyOCLContext, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * Lines*Columns*Weights, esomwts.data(), &Error0);
-  cl_mem clDM   = clCreateBuffer(MyOCLContext, CL_MEM_READ_WRITE, sizeof(float) * Lines*Columns, nullptr, &Error0);
+  cl_mem clESOM = clCreateBuffer(MyOCLContext, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * Lines*Columns*Weights, esomwts.data(), &Error);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
+  cl_mem clDM   = clCreateBuffer(MyOCLContext, CL_MEM_READ_WRITE, sizeof(float) * Lines*Columns, nullptr, &Error);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
   
   //cl::Buffer clESOM(MyOCLContext, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * Lines*Columns*Weights, esomwts.data());
   //cl::Buffer clDM(MyOCLContext, CL_MEM_READ_WRITE, sizeof(float) * Lines*Columns);
@@ -376,6 +469,11 @@ std::vector<float> trainstepC3(std::vector<float> esomwts,
   //MyOCLQueue.enqueueReadBuffer(clESOM, CL_TRUE, 0, sizeof(float) * Lines*Columns*Weights, esomwts.data());
   clEnqueueReadBuffer(MyOCLQueue, clESOM, CL_TRUE, 0, sizeof(float) * Lines*Columns*Weights, esomwts.data(), 0, NULL, NULL);
   
+  Error = clFinish(MyOCLQueue);
+  if(Error != CL_SUCCESS){
+    return(internal_error_handler(numPlatforms, NumDevices, dev_name, Error));
+  }
+  
   clReleaseKernel(Kernel_ToroidDistance);
   clReleaseKernel(Kernel_NonToroidDistance);
   clReleaseKernel(Kernel_UpdateWeights);
@@ -393,14 +491,22 @@ std::vector<float> trainstepC3(std::vector<float> esomwts,
   
   //free(platforms);
   
-  return(esomwts);
+  const char* msg2  = "success";
+  
+  return Rcpp::List::create(Rcpp::Named("esomwts")         = esomwts,
+                            Rcpp::Named("NumberPlatforms") = numPlatforms,
+                            Rcpp::Named("NumberDevices")   = NumDevices,
+                            Rcpp::Named("DeviceName")      = std::string(dev_name),
+                            Rcpp::Named("Feedback")        = std::string(msg2));
 }
 
 // [[Rcpp::export]]
-NumericVector trainSESOM(NumericVector Data, NumericVector BMUs, NumericVector RadiusVector,
-                         int N, int DIM, double MinData, double MaxData,
-                         int Lines, int Columns, int Weights,
-                         bool toroid, int NumDataPerEpoch){
+Rcpp::List trainSESOM(NumericVector Data, NumericVector BMUs, NumericVector RadiusVector,
+                      int N, int DIM, double MinData, double MaxData,
+                      int Lines, int Columns, int Weights,
+                      bool toroid, int NumDataPerEpoch){
+  
+  List ListRes;
   
   int CurrentRadius;
   
@@ -482,9 +588,12 @@ NumericVector trainSESOM(NumericVector Data, NumericVector BMUs, NumericVector R
     // End permutation
     
     if(N > NumDataPerEpoch){
-      esomwts = trainstepC3(esomwts, DataVector, BMUvector, BatchIndex, N, DIM, NumDataPerEpoch, Lines, Columns, Weights, CurrentRadius, toroid, i);
+      ListRes = trainstepC3(esomwts, DataVector, BMUvector, BatchIndex, N, DIM, NumDataPerEpoch, Lines, Columns, Weights, CurrentRadius, toroid, i);
+      esomwts = Rcpp::as<std::vector<float>>(ListRes["esomwts"]);
+      BatchIndex.clear();
     }else{
-      esomwts = trainstepC3(esomwts, DataVector, BMUvector, KeyBot, N, DIM, N, Lines, Columns, Weights, CurrentRadius, toroid, i);
+      ListRes = trainstepC3(esomwts, DataVector, BMUvector, KeyBot, N, DIM, N, Lines, Columns, Weights, CurrentRadius, toroid, i);
+      esomwts = Rcpp::as<std::vector<float>>(ListRes["esomwts"]);
     }
     
     //progress = (float) (i+1) / (float) NumEpochs;
@@ -506,5 +615,9 @@ NumericVector trainSESOM(NumericVector Data, NumericVector BMUs, NumericVector R
   NumericVector result(sizeESOM);
   std::copy(esomwts.begin(), esomwts.end(), result.begin());
   
-  return(result);
+  return Rcpp::List::create(Rcpp::Named("esomwts")         = result,
+                            Rcpp::Named("NumberPlatforms") = ListRes["NumberPlatforms"],
+                            Rcpp::Named("NumberDevices")   = ListRes["NumberDevices"],
+                            Rcpp::Named("DeviceName")      = ListRes["DeviceName"],
+                            Rcpp::Named("Feedback")        = ListRes["Feedback"]);
 }

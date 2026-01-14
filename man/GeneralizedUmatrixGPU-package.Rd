@@ -8,7 +8,7 @@
 \packageDescription{GeneralizedUmatrixGPU}
 }
 \details{
-For a brief introduction to \pkg{GeneralizedUmatrixGPU} please see the vignette \href{../doc/GeneralizedUmatrixGPU.html}{Introduction of the Generalized Umatrix Package}.
+For a brief introduction to \pkg{GeneralizedUmatrixGPU} please see the vignette of the CRAN package \href{https://CRAN.R-project.org/package=GeneralizedUmatrix}{GeneralizedUmatrix}.
 
 For further details regarding the generalized Umatrix see [Thrun, 2018], chapter 4-5, or [Thrun/Ultsch, 2020].
 
@@ -16,11 +16,7 @@ If you want to verifiy your clustering result externally, you can use \code{Heat
 
 \packageIndices{GeneralizedUmatrixGPU}
 }
-\author{
-Michal Thrun
-
-Maintainer: Michael Thrun <mthrun@informatik.uni-marburg.de>
-}
+\author{Quirin Stier}
 \references{
 [Thrun/Ultsch, 2020]  Thrun, M. C., & Ultsch, A.: Uncovering High-Dimensional Structures of Projections from Dimensionality Reduction Methods, MethodsX, Vol. 7, pp. 101093, DOI \doi{10.1016/j.mex.2020.101093}, 2020.
 
@@ -52,3 +48,4 @@ plotTopographicMap(resUmatrix$Umatrix,resUmatrix$Bestmatches,Cls)
 \keyword{DimensionalityReduction}
 \keyword{DR}
 \keyword{Projection}
+\keyword{GPU}

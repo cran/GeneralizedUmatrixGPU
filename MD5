@@ -1,8 +1,8 @@
-bcfb89d2ffbabeb0e0670b2773008c4c *DESCRIPTION
+d65e4c94e4ae1b2d0439160a0857a23a *DESCRIPTION
 41818081f88dd9d907a42d5cdf915520 *NAMESPACE
-2f16261b657ced616aaf3fd83e7f2bcb *R/GeneralizedUmatrixGPU.R
+a4cf744d045f8e146ee9b94e1528db23 *R/GeneralizedUmatrixGPU.R
 91db53f9bb5f6670a283fec41cad9ef8 *R/RcppExports.R
-fabbc0c2dbd19adc8b88565671d282f6 *build/partial.rdb
+d9f514f7af2e58ba697ea417f1dac686 *build/partial.rdb
 08fd7ffc4e7305afd395d90376329d4e *configure
 0d00b3563f9e01b53b3e484fe6cffa5d *configure.win
 0fb9c18352ccff4a4940e6a31264cdea *data/Chainlink.rda
@@ -28,9 +28,9 @@ ff7bfcdcf67785c0adbb986ceecee243 *inst/include/CL/cl_version.h
 f2168d0137b81b19e91cb595a4a9dc56 *inst/include/CL/opencl.h
 7723394171d81c69f4aa0f25388e9444 *man/Chainlink.Rd
 38b5beab7724e4d05d00f795724b9e14 *man/DefaultColorSequence.Rd
-6324c8116a1965b23b072521aad7822d *man/GeneralizedUmatrixGPU-package.Rd
-38918387789be35cd4551ad28177c692 *man/GeneralizedUmatrixGPU.Rd
+e92cb710cb3a4fd38db8330b580001c4 *man/GeneralizedUmatrixGPU-package.Rd
+924c9ad3eaa68a032722067139000fdc *man/GeneralizedUmatrixGPU.Rd
 d4dec25fbf810380b06691fee1380954 *src/Makevars.win
-45a4dc2d53b5a26e1a052a751fe63588 *src/RcppExports.cpp
+4acb738c5699643739745b89c28df5fb *src/RcppExports.cpp
 f0e8808074e4dccea1b3ef85aa88f916 *src/ocl.h
-881b2913be9195ff8ec3dc6945a69678 *src/trainSESOM.cpp
+234bfe2b332ee1cd1b5812e0558ed10e *src/trainSESOM.cpp
