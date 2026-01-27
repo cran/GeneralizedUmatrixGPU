@@ -25,19 +25,21 @@ If you want to verifiy your clustering result externally, you can use \code{Heat
 [Ultsch/Thrun, 2017]  Ultsch, A., & Thrun, M. C.: Credible Visualizations for Planar Projections, in Cottrell, M. (Ed.), 12th International Workshop on Self-Organizing Maps and Learning Vector Quantization, Clustering and Data Visualization (WSOM), IEEE Xplore, France, 2017.
 }
 \examples{
-library(GeneralizedUmatrix)
 data("Chainlink")
-Data=Chainlink$Data
-Cls=Chainlink$Cls
+SampleIdx = sample(1:1000, 200)
+Data=Chainlink$Data[SampleIdx,]
+Cls=Chainlink$Cls[SampleIdx]
 InputDistances=as.matrix(dist(Data))
 res=cmdscale(d=InputDistances, k = 2, eig = TRUE, add = FALSE, x.ret = FALSE)
 ProjectedPoints=as.matrix(res$points)
-#see also ProjectionBasedClustering package for other common projection methods
-#see DatabionicSwarm for projection method without parameters or objective function
+
+# see also R package 'ProjectionBasedClustering' for other common projection methods
+# see DatabionicSwarm for projection method without parameters or objective function
 # ProjectedPoints=DatabionicSwarm::Pswarm(Data)$ProjectedPoints
 \donttest{
 resUmatrix=GeneralizedUmatrixGPU(Data,ProjectedPoints)
-plotTopographicMap(resUmatrix$Umatrix,resUmatrix$Bestmatches,Cls)
+#library(GeneralizedUmatrix)
+#plotTopographicMap(resUmatrix$Umatrix,resUmatrix$Bestmatches,Cls)
 }
 }
 \keyword{GeneralizedUmatrix}

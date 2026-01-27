@@ -83,21 +83,16 @@ case).
 }
 
 \examples{
-library(GeneralizedUmatrix)
 data("Chainlink")
-Data=Chainlink$Data
-Cls=Chainlink$Cls
+SampleIdx = sample(1:1000, 200)
+Data=Chainlink$Data[SampleIdx,]
+Cls=Chainlink$Cls[SampleIdx]
 InputDistances=as.matrix(dist(Data))
 res=cmdscale(d=InputDistances, k = 2, eig = TRUE, add = FALSE, x.ret = FALSE)
 ProjectedPoints=as.matrix(res$points)
-
-\donttest{
-resUmatrix=GeneralizedUmatrixGPU(Data[1:2,], ProjectedPoints[1:2,])
-#plotTopographicMap(resUmatrix$Umatrix,resUmatrix$Bestmatches)
-#testing takes longer than 5 secs
-}
 \donttest{
 resUmatrix=GeneralizedUmatrixGPU(Data,ProjectedPoints)
+#library(GeneralizedUmatrix)
 #plotTopographicMap(resUmatrix$Umatrix,resUmatrix$Bestmatches,Cls)
 }
 }

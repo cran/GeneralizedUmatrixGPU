@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "cleanup: cleaning up src"
+
+rm -f src/Makevars src/GeneralizedUmatrixGPU.so
+
+echo "End of cleanup"
+

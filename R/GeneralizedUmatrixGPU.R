@@ -350,7 +350,21 @@ GeneralizedUmatrixGPU=function(Data, ProjectedPoints, PlotIt=FALSE, Cls=NULL,
                     toroid = toroid, NumDataPerEpoch = NumDataPerEpoch)
   
   if(VGPU$Feedback != "success"){
-    stop("Something went wrong within the context of OpenCL.")
+    message("Something went wrong within the context of OpenCL.")
+    
+    return(list(Umatrix         = matrix(0, nrow = Lines, ncol = Columns),
+                #EsomNeuronsInit = initWTS,
+                EsomNeurons     = array(0, dim = c(Lines, Columns, dim(Data)[2])),
+                Bestmatches     = BMUs,
+                Lines           = Lines,
+                Columns         = Columns,
+                sESOMparamaters = list(Eppochs          = HeuristischerParameter,
+                                       Rmax             = HeuristischerParameter,
+                                       Rmin             = 1,
+                                       RadiusVector     = RadiusVector,
+                                       CoolingStrategie = 'Linear, Lernratate ist const =1',
+                                       Toroid           = toroid),
+                gplotres        = NULL))
   }
   
   wts = VGPU$esomwts

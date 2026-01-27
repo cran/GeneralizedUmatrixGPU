@@ -1,0 +1,18 @@
+echo 'cleanup: cleaning up src'
+
+if [ -f src/Makevars.win ]; then
+   rm -f src/Makevars.win
+fi
+
+if [ -f src/GeneralizedUmatrixGPU.dll ]; then
+   rm -f src/GeneralizedUmatrixGPU.dll
+fi
+
+if [ -f src/*.o ]; then
+   rm -f src/*.o
+fi
+
+
+
+echo 'End of cleanup'
+
